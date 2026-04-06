@@ -1,0 +1,21 @@
+{
+  "name": "ai-rag-fastify-starter",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/server.ts"
+  },
+  "dependencies": {
+    "@fastify/multipart": "^8.3.1",
+    "@supabase/supabase-js": "^2.101.1",
+    "@types/node": "^25.5.2",
+    "dotenv": "^16.0.0",
+    "fastify": "^4.0.0",
+    "fastify-plugin": "^4.0.0",
+    "openai": "^4.0.0",
+    "pdf-parse": "^2.4.5"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
+}
