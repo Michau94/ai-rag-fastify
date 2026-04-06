@@ -5,6 +5,7 @@ Complete step-by-step guide to run, configure, and use this project.
 ## 1) Overview
 
 This project implements a backend RAG pipeline with:
+
 - Fastify (API server)
 - Document upload (`.pdf` and `.txt`)
 - Text parsing
@@ -15,6 +16,7 @@ This project implements a backend RAG pipeline with:
 - Chat answer generation with OpenAI (`gpt-4o-mini`)
 
 Available endpoints:
+
 - `POST /upload` to index documents
 - `POST /chat` to ask questions about indexed documents
 
@@ -40,6 +42,7 @@ npm run dev
 ```
 
 Server URL:
+
 - `http://localhost:3000`
 
 ## 4) Environment Variables
@@ -53,12 +56,14 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 Notes:
+
 - `OPENAI_API_KEY` is used for both embeddings and chat.
 - `SUPABASE_URL` and `SUPABASE_ANON_KEY` are used by the Supabase client in `src/plugins/supabase.ts`.
 
 ## 5) Supabase Database Setup (Required)
 
 The code expects:
+
 - `documents` table
 - `content` column
 - `embedding` column (vector)
@@ -98,6 +103,7 @@ $$;
 ```
 
 Important:
+
 - The embedding dimension `1536` must match `text-embedding-3-small`.
 - The current code no longer writes a `source` field, so that column is not required.
 
@@ -106,8 +112,10 @@ Important:
 ### 6.1 Upload (`POST /upload`)
 
 1. Accepts files in two modes:
+
 - `multipart/form-data` (file field)
 - raw body with `Content-Type: application/pdf` or `text/plain`
+
 2. `parseFile` converts input to text (`src/services/ingest.ts`)
 3. `smartChunk` splits text into chunks (`src/services/chunk.ts`)
 4. Generates embeddings for each chunk (`src/services/embedding.ts`)
@@ -203,30 +211,37 @@ src/
 ### 10.1 `415 Unsupported Media Type: application/pdf`
 
 Cause:
+
 - raw PDF request without a matching content-type parser.
 
 Project status:
+
 - handled with custom parsers in `server.ts`.
 
 ### 10.2 `FST_INVALID_MULTIPART_CONTENT_TYPE`
 
 Cause:
+
 - `request.file()` called on a non-multipart request.
 
 Project status:
+
 - handled in `upload.ts` with `request.isMultipart()` branching.
 
 ### 10.3 `PGRST204 Could not find the 'source' column`
 
 Cause:
+
 - insert payload includes a column that does not exist.
 
 Project status:
+
 - `source` removed from insert payload in `store.ts`.
 
 ### 10.4 Low-quality chat answers
 
 Check:
+
 - at least one successful upload was completed
 - `match_documents` function exists
 - `documents` table has data
@@ -239,7 +254,6 @@ Check:
 - No retry/backoff strategy for OpenAI/Supabase calls
 - No document deduplication
 - Minimal logging
-- Temporary cap in `store.ts`: `smartChunk(text).slice(0, 20)` (for testing/cost control)
 
 ## 12) Quick Start Checklist
 
